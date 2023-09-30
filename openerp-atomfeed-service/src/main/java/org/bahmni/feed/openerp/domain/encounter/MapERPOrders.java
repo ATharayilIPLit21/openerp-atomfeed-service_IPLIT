@@ -108,5 +108,25 @@ public class MapERPOrders extends OpenMRSEncounterEvent {
         return null;
     }
 
+    private String getVisitAttributes() {
+        HashMap<String, Object> visitAttributes = new HashMap<>();
+        String attrName;
+        String attrValue;
+        for (VisitAttributes visitAttribute : openMRSVisit.getAttributes()) {
+            attrName = visitAttribute.getAttributeType().getDisplay();
+            attrValue = visitAttribute.getValue();
+            visitAttributes.put(attrName, attrValue);
+        }
+        String visitAttributesJson = "";
+        try {
+            visitAttributesJson = ObjectMapperRepository.objectMapper.writeValueAsString(visitAttributes);
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(MapERPOrders.class);
+            logger.error("Unable to convert visitAttributes hash to json string. " + e.getMessage());
+        }
+
+        return visitAttributesJson;
+    }
+
 
 }
